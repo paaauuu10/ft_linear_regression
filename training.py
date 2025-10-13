@@ -8,7 +8,7 @@ def load_data(filename='data.csv'):
     try: 
         with open(filename, mode='r') as file: 
             csvFile = csv.reader(file)
-            next(csvFile)  # saltar cabecera
+            next(csvFile)
             for lines in csvFile:
                 mileage.append(float(lines[0]))
                 price.append(float(lines[1]))
