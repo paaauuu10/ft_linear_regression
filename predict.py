@@ -1,24 +1,23 @@
-# predecir.py
-import csv
+def load_model():
+    """Carrega els paràmetres del model"""
+    with open("model.txt", "r") as f:
+        line = f.readline()
+        theta0, theta1 = map(float, line.strip().split(","))
+    return theta0, theta1
 
-# Leer θ0 y θ1 del archivo
-with open("model.txt", "r") as f:
-    line = f.readline()
-    theta0, theta1, max_mileage, max_price = map(float, line.strip().split(","))
+def predict(km, theta0, theta1):
+    """Prediu el preu basant-se en els quilòmetres"""
+    return theta0 + theta1 * km
 
-# Convertir a escala real
-a = theta0 * max_price
-b = theta1 * (max_price / max_mileage)
-
-# Convertir θ a escala real
-a = theta0 * max_price
-b = theta1 * (max_price / max_mileage)
-
-# Función para predecir
-def predict(km):
-    return a + b * km
-
-# Ejemplo de uso
-km_coche = float(input("Introduce los km del coche: "))
-precio_estimado = predict(km_coche)
-print(f"Precio estimado: {precio_estimado:.2f} €")
+if __name__ == "__main__":
+    # Carregar el model
+    theta0, theta1 = load_model()
+    
+    # Demanar quilòmetres
+    km_coche = float(input("Introduce los km del coche: "))
+    
+    # Fer predicció
+    precio_estimado = predict(km_coche, theta0, theta1)
+    
+    # Mostrar resultat
+    print(f"Precio estimado: {precio_estimado:.2f} €")
