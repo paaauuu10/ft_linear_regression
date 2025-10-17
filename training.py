@@ -1,23 +1,29 @@
 import csv
 
 # Getting data from .csv
-def load_data(filename='data.csv'):
+def load_data():
     mileage = []
     price = []
     
-    try: 
-        with open(filename, mode='r') as file: 
-            csvFile = csv.reader(file)
-            next(csvFile)
-            for lines in csvFile:
-                mileage.append(float(lines[0]))
-                price.append(float(lines[1]))
-            if (len(mileage) < 1):
-                exit (1)
-    except:
-        print('No se ha podido leer el archivo')
-        exit(1)
+    with open("data.csv", "r") as f:
+        reader = csv.reader(f)
+        next(reader)  # Omitir el encabezado si existe
         
+        for row in reader:
+            try:
+                km = float(row[0])
+                price = float(row[1])
+                
+                # Omitir líneas con valores negativos
+                if km < 0 or price < 0:
+                    print(f"Omitiendo línea con valores negativos: {row}")
+                    continue                
+                mileage.append(km)
+                price.append(price)
+            except ValueError:
+                print(f"Omitiendo línea con datos inválidos: {row}")
+                continue
+    
     return mileage, price
 
 # Normalize to get values between 0-1
@@ -34,11 +40,7 @@ def gradient_descent(mileage_norm, price_norm, learning_rate=0.01, iterations=10
     m = len(mileage_norm)
     theta0 = 0.0
     theta1 = 0.0
-    
-    print("-" * 50)
-    print("Iniciando entrenamiento...")
-
-    
+        
     # Gradient descent loop
     for it in range(iterations):
         predictions = [theta0 + theta1 * km for km in mileage_norm]
@@ -64,12 +66,8 @@ def save_model(theta0, theta1, max_mileage, max_price):
 
 
 def show_results(theta0, theta1):
-
     print(f"Theta0: {theta0}")
     print(f"Theta1: {theta1}")
-    print(f"Modelo en valores reales: price = {theta0:.2f} + {theta1:.2f} * mileage")
-    print("¡Entrenamiento completado!")
-    print("-" * 50)
 
 if __name__ == "__main__":
     mileage, price = load_data()
